@@ -3,8 +3,10 @@ declare type Awaitable<T> = Promise<T> | T;
 export declare class TypedJsonFile<T> {
     readonly path: string;
     readonly defaults: Convert<T>;
+    private static readonly errGuard;
     private readonly awaitLock;
     constructor(path: string, defaults: Convert<T>);
+    private static tryReadJson;
     read(): Promise<T>;
     write(data: T): Promise<void>;
     lock(options?: {

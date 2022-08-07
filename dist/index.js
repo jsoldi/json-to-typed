@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { Convert } from 'to-typed';
+import { Convert, Guard } from 'to-typed';
 import AwaitLock from './await-lock.js';
 export class TypedJsonFile {
     constructor(path, defaults) {
@@ -7,9 +7,21 @@ export class TypedJsonFile {
         this.defaults = defaults;
         this.awaitLock = new AwaitLock();
     }
+    static async tryReadJson(path) {
+        try {
+            const json = await fs.readFile(path, 'utf8');
+            return JSON.parse(json);
+        }
+        catch (err) {
+            if (TypedJsonFile.errGuard.guard(err)) {
+                if (err.code === 'ENOENT')
+                    return undefined; // Not null since null is valid JSON
+            }
+            throw err;
+        }
+    }
     async read() {
-        const json = await fs.readFile(this.path, 'utf8');
-        const data = JSON.parse(json);
+        const data = await TypedJsonFile.tryReadJson(this.path);
         return this.defaults.convert(data);
     }
     async write(data) {
@@ -38,3 +50,4 @@ export class TypedJsonFile {
         return new TypedJsonFile(path, Convert.to(defaults));
     }
 }
+TypedJsonFile.errGuard = Guard.is({ code: '' });
