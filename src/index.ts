@@ -1,6 +1,5 @@
 import fs from 'fs/promises';
-import { promise as glob } from 'glob-promise';
-import { Convert, Guard } from 'to-typed'
+import { Convert, Guard, TGuardMap } from 'to-typed'
 
 export class TypedJsonFile<T> {
     constructor(public readonly path: string, public readonly defaults: Convert<T>) { }
@@ -16,7 +15,7 @@ export class TypedJsonFile<T> {
         await fs.writeFile(this.path, json);
     }
 
-    static fromDefaults<S>(path: string, defaults: S) {
-        return new TypedJsonFile(path, Guard.is(defaults).else(defaults));
+    static fromDefaults<S>(path: string, defaults: S): TypedJsonFile<TGuardMap<S>> {
+        return new TypedJsonFile(path, Guard.is(defaults).else(defaults as TGuardMap<S>));
     }
 }
