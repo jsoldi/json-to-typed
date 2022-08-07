@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import { Convert, TConvertMap } from 'to-typed'
-import AwaitLock from 'await-lock';
+import AwaitLock from './await-lock.js';
+
+type Awaitable<T> = Promise<T> | T;
 
 export class TypedJsonFile<T> {
     private readonly awaitLock = new AwaitLock();
@@ -26,12 +28,14 @@ export class TypedJsonFile<T> {
         this.awaitLock.release();
     }
 
-    async modify(modifier: (data: T) => T | Promise<T>): Promise<void> {
+    async modify(modifier: (data: T) => Awaitable<T | void>): Promise<void> {
         try {
             await this.lock();
             const data = await this.read();
             const newData = await modifier(data);
-            await this.write(newData);
+
+            if (typeof newData !== 'undefined') 
+                await this.write(newData);
         }
         finally {
             this.unlock();

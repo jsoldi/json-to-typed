@@ -1,4 +1,5 @@
 import { Convert, TConvertMap } from 'to-typed';
+declare type Awaitable<T> = Promise<T> | T;
 export declare class TypedJsonFile<T> {
     readonly path: string;
     readonly defaults: Convert<T>;
@@ -10,6 +11,7 @@ export declare class TypedJsonFile<T> {
         timeout?: number;
     }): Promise<void>;
     unlock(): void;
-    modify(modifier: (data: T) => T | Promise<T>): Promise<void>;
+    modify(modifier: (data: T) => Awaitable<T | void>): Promise<void>;
     static fromDefaults<S>(path: string, defaults: S): TypedJsonFile<TConvertMap<S>>;
 }
+export {};

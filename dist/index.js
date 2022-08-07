@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import { Convert } from 'to-typed';
-import AwaitLock from 'await-lock';
+import AwaitLock from './await-lock.js';
 export class TypedJsonFile {
     constructor(path, defaults) {
         this.path = path;
@@ -27,7 +27,8 @@ export class TypedJsonFile {
             await this.lock();
             const data = await this.read();
             const newData = await modifier(data);
-            await this.write(newData);
+            if (typeof newData !== 'undefined')
+                await this.write(newData);
         }
         finally {
             this.unlock();

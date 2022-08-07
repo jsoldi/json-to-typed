@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Build to-typed objects from JSON files.",
   "repository": {
     "type": "git",
@@ -20,7 +20,6 @@
   "author": "Juan Soldi",
   "license": "MIT",
   "dependencies": {
-    "await-lock": "^2.2.2",
     "glob": "^8.0.3",
     "glob-promise": "^5.0.0",
     "to-typed": "^0.4.1"
