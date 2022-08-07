@@ -26,11 +26,11 @@ export class TypedJsonFile<T> {
         this.awaitLock.release();
     }
 
-    async modify(modifier: (data: T) => T): Promise<void> {
+    async modify(modifier: (data: T) => T | Promise<T>): Promise<void> {
         try {
             await this.lock();
             const data = await this.read();
-            const newData = modifier(data);
+            const newData = await modifier(data);
             await this.write(newData);
         }
         finally {

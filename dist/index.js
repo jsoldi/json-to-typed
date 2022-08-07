@@ -26,7 +26,7 @@ export class TypedJsonFile {
         try {
             await this.lock();
             const data = await this.read();
-            const newData = modifier(data);
+            const newData = await modifier(data);
             await this.write(newData);
         }
         finally {

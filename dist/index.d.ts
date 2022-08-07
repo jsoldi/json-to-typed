@@ -10,6 +10,6 @@ export declare class TypedJsonFile<T> {
         timeout?: number;
     }): Promise<void>;
     unlock(): void;
-    modify(modifier: (data: T) => T): Promise<void>;
+    modify(modifier: (data: T) => T | Promise<T>): Promise<void>;
     static fromDefaults<S>(path: string, defaults: S): TypedJsonFile<TConvertMap<S>>;
 }
