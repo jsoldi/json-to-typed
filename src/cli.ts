@@ -29,10 +29,13 @@ class Cli {
                 if (args.length < 2) 
                     throw new Error('Missing glob pattern');
 
-                return Cli.gen(args[1], args[2], args[3]);
+                Cli.gen(args[1], args[2], args[3]);
+                break;
             default:
                 throw new Error('Unknown command');
         }
+
+        process.exit();
     }
 }
 
