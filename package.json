@@ -1,9 +1,9 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Build to-typed objects from JSON files.",
-  "main": "./dist/cli.js",
+  "main": "./dist/index.js",
   "bin": {
     "json-to-typed": "./dist/cli.js"  
   },

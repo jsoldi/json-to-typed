@@ -1,44 +1,22 @@
-#! /usr/bin/env node
 import fs from 'fs/promises';
-import { Guard } from 'to-typed';
 import { promise as glob } from 'glob-promise';
-import { TypedJsonFile } from './typed-json-file';
+import { Convert, Guard } from 'to-typed'
 
-export { TypedJsonFile } from './typed-json-file.js';
+export class TypedJsonFile<T> {
+    constructor(public readonly path: string, public readonly defaults: Convert<T>) { }
 
-class Cli {
-    private static async gen(inGlob: string, outFile: string = 'json-to-typed.ts', className: string = 'Data') {
-        const fileTemplate = 'static readonly ["<PATH>"] = TypedJsonFile.fromDefaults("<PATH>", <JSON>);';
-        const files = await glob(inGlob);
-        
-        const members = await Promise.all(files.map(async file => {
-            const json = await fs.readFile(file, 'utf8');
-            const data = JSON.parse(json);
-            return fileTemplate.replace(/<PATH>/g, file).replace('<JSON>', JSON.stringify(data));
-        }));
-
-        let result = '';
-        result += 'import { TypedJsonFile } from "json-to-typed";\n';
-        result += '\n';
-        result += `export class ${className} {\n`;
-        result += members.map(m => '\t' + m).join('\n');
-        result += '\n';
-        result += '}\n';
-        await fs.writeFile(outFile, result);
+    async read(): Promise<T> {
+        const json = await fs.readFile(this.path, 'utf8');
+        const data = JSON.parse(json);
+        return this.defaults.convert(data);
     }
 
-    static async run(args: string[]) {
-        console.log(args.join(' '));
+    async write(data: T): Promise<void> {
+        const json = JSON.stringify(data, null, 2);
+        await fs.writeFile(this.path, json);
+    }
 
-        switch (args[0]) {
-            case 'gen':
-
-            if (args.length < 2) 
-                throw new Error('Missing glob pattern');
-
-            return Cli.gen(args[1], args[2], args[3]);
-        }
-    }    
+    static fromDefaults<S>(path: string, defaults: S) {
+        return new TypedJsonFile(path, Guard.is(defaults).else(defaults));
+    }
 }
-
-Cli.run(process.argv.slice(2));

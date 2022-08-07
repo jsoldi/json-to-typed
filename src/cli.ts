@@ -1,16 +1,18 @@
 #! /usr/bin/env node
 import fs from 'fs/promises';
 import { promise as glob } from 'glob-promise';
-export { TypedJsonFile } from './typed-json-file.js';
+
 class Cli {
-    static async gen(inGlob, outFile = 'json-to-typed.ts', className = 'Data') {
+    private static async gen(inGlob: string, outFile: string = 'json-to-typed.ts', className: string = 'Data') {
         const fileTemplate = 'static readonly ["<PATH>"] = TypedJsonFile.fromDefaults("<PATH>", <JSON>);';
         const files = await glob(inGlob);
-        const members = await Promise.all(files.map(async (file) => {
+        
+        const members = await Promise.all(files.map(async file => {
             const json = await fs.readFile(file, 'utf8');
             const data = JSON.parse(json);
             return fileTemplate.replace(/<PATH>/g, file).replace('<JSON>', JSON.stringify(data));
         }));
+
         let result = '';
         result += 'import { TypedJsonFile } from "json-to-typed";\n';
         result += '\n';
@@ -20,14 +22,19 @@ class Cli {
         result += '}\n';
         await fs.writeFile(outFile, result);
     }
-    static async run(args) {
+
+    static async run(args: string[]) {
         console.log(args.join(' '));
+
         switch (args[0]) {
             case 'gen':
-                if (args.length < 2)
-                    throw new Error('Missing glob pattern');
-                return Cli.gen(args[1], args[2], args[3]);
+
+            if (args.length < 2) 
+                throw new Error('Missing glob pattern');
+
+            return Cli.gen(args[1], args[2], args[3]);
         }
-    }
+    }    
 }
+
 Cli.run(process.argv.slice(2));
