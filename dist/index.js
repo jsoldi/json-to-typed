@@ -34,13 +34,10 @@ export class TypedJsonFile {
     unlock() {
         this.awaitLock.release();
     }
-    async modify(modifier) {
+    async use(fun) {
         try {
             await this.lock();
-            const data = await this.read();
-            const newData = await modifier(data);
-            if (typeof newData !== 'undefined')
-                await this.write(newData);
+            return await fun(this);
         }
         finally {
             this.unlock();

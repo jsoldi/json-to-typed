@@ -43,14 +43,10 @@ export class TypedJsonFile<T> {
         this.awaitLock.release();
     }
 
-    async modify(modifier: (data: T) => Awaitable<T | void>): Promise<void> {
+    async use<R>(fun: (self: TypedJsonFile<T>) => Promise<R>): Promise<R> {
         try {
             await this.lock();
-            const data = await this.read();
-            const newData = await modifier(data);
-
-            if (typeof newData !== 'undefined') 
-                await this.write(newData);
+            return await fun(this);
         }
         finally {
             this.unlock();
