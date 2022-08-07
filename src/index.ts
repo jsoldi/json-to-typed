@@ -1,7 +1,10 @@
 import fs from 'fs/promises';
-import { Convert, Guard, TGuardMap } from 'to-typed'
+import { Convert, TConvertMap } from 'to-typed'
+import AwaitLock from 'await-lock';
 
 export class TypedJsonFile<T> {
+    private readonly awaitLock = new AwaitLock();
+
     constructor(public readonly path: string, public readonly defaults: Convert<T>) { }
 
     async read(): Promise<T> {
@@ -15,7 +18,27 @@ export class TypedJsonFile<T> {
         await fs.writeFile(this.path, json);
     }
 
-    static fromDefaults<S>(path: string, defaults: S): TypedJsonFile<TGuardMap<S>> {
-        return new TypedJsonFile(path, Guard.is(defaults).else(defaults as TGuardMap<S>));
+    async lock(options?: { timeout?: number }): Promise<void> {
+        return await this.awaitLock.acquireAsync(options)
+    }
+
+    unlock() {
+        this.awaitLock.release();
+    }
+
+    async modify(modifier: (data: T) => T): Promise<void> {
+        try {
+            await this.lock();
+            const data = await this.read();
+            const newData = modifier(data);
+            await this.write(newData);
+        }
+        finally {
+            this.unlock();
+        }
+    }
+
+    static fromDefaults<S>(path: string, defaults: S): TypedJsonFile<TConvertMap<S>> {
+        return new TypedJsonFile(path, Convert.to(defaults));
     }
 }

@@ -1,8 +1,12 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Build to-typed objects from JSON files.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsoldi/json-to-typed"
+  },
   "main": "./dist/index.js",
   "bin": {
     "json-to-typed": "./dist/cli.js"
@@ -13,9 +17,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Juan Soldi",
+  "license": "MIT",
   "dependencies": {
+    "await-lock": "^2.2.2",
     "glob": "^8.0.3",
     "glob-promise": "^5.0.0",
     "to-typed": "^0.4.1"

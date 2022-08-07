@@ -24,6 +24,9 @@ class Cli {
     }
 
     private static async runInternal(args: string[]) {
+        if (args.length < 1) 
+            throw new Error('Missing command');
+
         switch (args[0]) {
             case 'gen':
                 if (args.length < 2) 
@@ -31,13 +34,21 @@ class Cli {
 
                 return Cli.gen(args[1], args[2], args[3]);
             default:
-                throw new Error('Unknown command');
+                throw new Error(`Unknown command: ${args[0]}`);
         }
     }
 
     static async run() {
-        await this.runInternal(process.argv.slice(2));
-        process.exit();
+        if (process.argv.length < 3) {
+            console.log('Usage: json-to-typed <command> <args>');
+            console.log('Commands:');
+            console.log('  gen <input-glob> [outFile] [className] - Generate TypedJsonFile classes');
+            return;
+        }
+        else {
+            await this.runInternal(process.argv.slice(2));
+            process.exit();
+        }
     }
 }
 
