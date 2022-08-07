@@ -1,20 +1,33 @@
+#! /usr/bin/env node
 import fs from 'fs/promises';
-import { Guard } from 'to-typed';
-export class TypedJsonFile {
-    constructor(path, defaults) {
-        this.path = path;
-        this.defaults = defaults;
+import { promise as glob } from 'glob-promise';
+export { TypedJsonFile } from './typed-json-file.js';
+class Cli {
+    static async gen(inGlob, outFile = 'json-to-typed.ts', className = 'Data') {
+        const fileTemplate = 'static readonly ["<PATH>"] = TypedJsonFile.fromDefaults("<PATH>", <JSON>);';
+        const files = await glob(inGlob);
+        const members = await Promise.all(files.map(async (file) => {
+            const json = await fs.readFile(file, 'utf8');
+            const data = JSON.parse(json);
+            return fileTemplate.replace(/<PATH>/g, file).replace('<JSON>', JSON.stringify(data));
+        }));
+        let result = '';
+        result += 'import { TypedJsonFile } from "json-to-typed";\n';
+        result += '\n';
+        result += `export class ${className} {\n`;
+        result += members.map(m => '\t' + m).join('\n');
+        result += '\n';
+        result += '}\n';
+        await fs.writeFile(outFile, result);
     }
-    async read() {
-        const json = await fs.readFile(this.path, 'utf8');
-        const data = JSON.parse(json);
-        return this.defaults.convert(data);
-    }
-    async write(data) {
-        const json = JSON.stringify(data, null, 2);
-        await fs.writeFile(this.path, json);
-    }
-    static fromDefaults(path, defaults) {
-        return new TypedJsonFile(path, Guard.is(defaults).else(defaults));
+    static async run(args) {
+        console.log(args.join(' '));
+        switch (args[0]) {
+            case 'gen':
+                if (args.length < 2)
+                    throw new Error('Missing glob pattern');
+                return Cli.gen(args[1], args[2], args[3]);
+        }
     }
 }
+Cli.run(process.argv.slice(2));
