@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Build to-typed objects from JSON files.",
   "main": "./dist/index.js",
   "bin": {

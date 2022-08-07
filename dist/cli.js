@@ -19,17 +19,19 @@ class Cli {
         result += '}\n';
         await fs.writeFile(outFile, result);
     }
-    static async run(args) {
+    static async runInternal(args) {
         switch (args[0]) {
             case 'gen':
                 if (args.length < 2)
                     throw new Error('Missing glob pattern');
-                Cli.gen(args[1], args[2], args[3]);
-                break;
+                return Cli.gen(args[1], args[2], args[3]);
             default:
                 throw new Error('Unknown command');
         }
+    }
+    static async run() {
+        await this.runInternal(process.argv.slice(2));
         process.exit();
     }
 }
-Cli.run(process.argv.slice(2));
+Cli.run();
