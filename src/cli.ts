@@ -24,17 +24,16 @@ class Cli {
     }
 
     static async run(args: string[]) {
-        console.log(args.join(' '));
-
         switch (args[0]) {
             case 'gen':
+                if (args.length < 2) 
+                    throw new Error('Missing glob pattern');
 
-            if (args.length < 2) 
-                throw new Error('Missing glob pattern');
-
-            return Cli.gen(args[1], args[2], args[3]);
+                return Cli.gen(args[1], args[2], args[3]);
+            default:
+                throw new Error('Unknown command');
         }
-    }    
+    }
 }
 
 Cli.run(process.argv.slice(2));

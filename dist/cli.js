@@ -20,12 +20,13 @@ class Cli {
         await fs.writeFile(outFile, result);
     }
     static async run(args) {
-        console.log(args.join(' '));
         switch (args[0]) {
             case 'gen':
                 if (args.length < 2)
                     throw new Error('Missing glob pattern');
                 return Cli.gen(args[1], args[2], args[3]);
+            default:
+                throw new Error('Unknown command');
         }
     }
 }
