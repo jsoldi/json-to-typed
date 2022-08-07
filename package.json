@@ -1,11 +1,11 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Build to-typed objects from JSON files.",
   "main": "./dist/index.js",
   "bin": {
-    "json-to-typed": "./dist/cli.js"  
+    "carateca": "./dist/cli.js"  
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
