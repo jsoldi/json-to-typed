@@ -18,6 +18,3 @@ export class TypedJsonFile {
         return new TypedJsonFile(path, Guard.is(defaults).else(defaults));
     }
 }
-export class JsonToTyped {
-}
-JsonToTyped['data.json'] = TypedJsonFile.fromDefaults('data.json', { uno: 123 });

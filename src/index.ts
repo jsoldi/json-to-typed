@@ -20,7 +20,3 @@ export class TypedJsonFile<T> {
         return new TypedJsonFile(path, Guard.is(defaults).else(defaults));
     }
 }
-
-export class JsonToTyped {
-    static readonly ['data.json'] = TypedJsonFile.fromDefaults('data.json', { uno: 123 });
-}
