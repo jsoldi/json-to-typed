@@ -1,10 +1,10 @@
 import { Convert, TConvertMap } from 'to-typed';
 export declare class TypedJsonFile<T> {
     readonly path: string;
-    readonly defaults: Convert<T>;
+    readonly type: Convert<T>;
     private static readonly errGuard;
     private readonly awaitLock;
-    constructor(path: string, defaults: Convert<T>);
+    constructor(path: string, type: Convert<T>);
     private static tryReadJson;
     read(): Promise<T>;
     write(data: T): Promise<void>;

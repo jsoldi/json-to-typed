@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Build to-typed objects from JSON files.",
   "repository": {
     "type": "git",
@@ -15,7 +15,8 @@
     "dist"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "author": "Juan Soldi",
   "license": "MIT",

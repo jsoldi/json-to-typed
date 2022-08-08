@@ -2,9 +2,9 @@ import fs from 'fs/promises';
 import { Convert, Guard } from 'to-typed';
 import AwaitLock from './await-lock.js';
 export class TypedJsonFile {
-    constructor(path, defaults) {
+    constructor(path, type) {
         this.path = path;
-        this.defaults = defaults;
+        this.type = type;
         this.awaitLock = new AwaitLock();
     }
     static async tryReadJson(path) {
@@ -22,7 +22,7 @@ export class TypedJsonFile {
     }
     async read() {
         const data = await TypedJsonFile.tryReadJson(this.path);
-        return this.defaults.convert(data);
+        return this.type.convert(data);
     }
     async write(data) {
         const json = JSON.stringify(data, null, 2);

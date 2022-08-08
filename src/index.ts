@@ -2,13 +2,11 @@ import fs from 'fs/promises';
 import { Convert, Guard, TConvertMap } from 'to-typed'
 import AwaitLock from './await-lock.js';
 
-type Awaitable<T> = Promise<T> | T;
-
 export class TypedJsonFile<T> {
     private static readonly errGuard = Guard.is({ code: '' });
     private readonly awaitLock = new AwaitLock();
 
-    constructor(public readonly path: string, public readonly defaults: Convert<T>) { }
+    constructor(public readonly path: string, public readonly type: Convert<T>) { }
 
     private static async tryReadJson(path: string) {
         try {
@@ -27,7 +25,7 @@ export class TypedJsonFile<T> {
 
     async read(): Promise<T> {
         const data = await TypedJsonFile.tryReadJson(this.path);
-        return this.defaults.convert(data);
+        return this.type.convert(data);
     }
 
     async write(data: T): Promise<void> {
