@@ -46,7 +46,7 @@ export class TypedJsonFile {
     async update(fun) {
         await this.use(async (self) => {
             const data = await self.read();
-            const newData = fun(data);
+            const newData = await fun(data);
             await self.write(newData);
         });
     }

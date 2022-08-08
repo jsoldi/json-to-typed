@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Build to-typed objects from JSON files.",
   "repository": {
     "type": "git",

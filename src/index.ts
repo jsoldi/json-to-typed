@@ -2,6 +2,8 @@ import fs from 'fs/promises';
 import { Convert, Guard, TConvertMap } from 'to-typed'
 import AwaitLock from './await-lock.js';
 
+type Awaitable<T> = Promise<T> | T;
+
 export class TypedJsonFile<T> {
     private static readonly errGuard = Guard.is({ code: '' });
     private readonly awaitLock = new AwaitLock();
@@ -51,10 +53,10 @@ export class TypedJsonFile<T> {
         }
     }
 
-    async update(fun: (data: T) => T): Promise<void> {
+    async update(fun: (data: T) => Awaitable<T>): Promise<void> {
         await this.use(async self => {
             const data = await self.read();
-            const newData = fun(data);
+            const newData = await fun(data);
             await self.write(newData);
         });
     }
