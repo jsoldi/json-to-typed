@@ -13,5 +13,6 @@ export declare class TypedJsonFile<T> {
     }): Promise<void>;
     unlock(): void;
     use<R>(fun: (self: TypedJsonFile<T>) => Promise<R>): Promise<R>;
+    update(fun: (data: T) => T): Promise<void>;
     static fromDefaults<S>(path: string, defaults: S): TypedJsonFile<TConvertMap<S>>;
 }

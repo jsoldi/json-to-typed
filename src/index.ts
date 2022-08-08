@@ -51,6 +51,14 @@ export class TypedJsonFile<T> {
         }
     }
 
+    async update(fun: (data: T) => T): Promise<void> {
+        await this.use(async self => {
+            const data = await self.read();
+            const newData = fun(data);
+            await self.write(newData);
+        });
+    }
+
     static fromDefaults<S>(path: string, defaults: S): TypedJsonFile<TConvertMap<S>> {
         return new TypedJsonFile(path, Convert.to(defaults));
     }

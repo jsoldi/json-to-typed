@@ -43,6 +43,13 @@ export class TypedJsonFile {
             this.unlock();
         }
     }
+    async update(fun) {
+        await this.use(async (self) => {
+            const data = await self.read();
+            const newData = fun(data);
+            await self.write(newData);
+        });
+    }
     static fromDefaults(path, defaults) {
         return new TypedJsonFile(path, Convert.to(defaults));
     }
