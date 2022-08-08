@@ -1,12 +1,17 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.23",
+  "version": "0.1.0",
   "description": "Build to-typed objects from JSON files.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jsoldi/json-to-typed"
   },
+  "keywords": [
+    "type-guard",
+    "type-cast",
+    "type-convert"
+  ],
   "main": "./dist/index.js",
   "bin": {
     "json-to-typed": "./dist/cli.js"
