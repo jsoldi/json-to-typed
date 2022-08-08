@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "json-to-typed",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Build to-typed objects from JSON files.",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "dependencies": {
     "glob": "^8.0.3",
     "glob-promise": "^5.0.0",
-    "to-typed": "^0.4.1"
+    "to-typed": "^0.4.2"
   },
   "devDependencies": {
     "@types/node": "^18.6.4"
